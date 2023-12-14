@@ -29,7 +29,7 @@ def main():
     # Inputウィジェットを配置
     timer_minutes = st.number_input("Minutes:", value=1, min_value=0, max_value=60)
     timer_seconds = st.number_input(
-        "Seconds:", value=0, min_value=0, max_value=59, step=10
+        "Seconds:", value=0, min_value=0, max_value=59, step=5
     )
 
     # 合計タイマー時間(秒)を計算
