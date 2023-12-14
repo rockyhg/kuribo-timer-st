@@ -1,0 +1,5 @@
+pip
+isort
+flake8
+black
+streamlit
