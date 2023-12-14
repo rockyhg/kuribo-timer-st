@@ -2,8 +2,10 @@ import time
 
 import streamlit as st
 
-COUNT_IMG = './sleeping.gif'
-TIMEUP_IMG = './wakeup.gif'
+COUNTDOWN_IMG = "./sleeping.gif"
+TIME_UP_IMG = "./wakeup.gif"
+IMG_WIDTH = 360
+
 
 def format_time(seconds):
     """Format time in seconds into mm:ss"""
@@ -13,16 +15,57 @@ def format_time(seconds):
 
 
 def main():
+    st.set_page_config(page_title="Lightning Talk Timer", page_icon="⏰")
     st.title("Lightning Talk Timer")
-    timer_time_minutes = st.number_input("Enter the time in minutes:", min_value=1, max_value=25)
-    timer_time_sec = timer_time_minutes * 60
 
-    if st.button('START'):
-        with st.empty():
-            for remaining in range(timer_time_sec, 0, -1):
-                st.write(format_time(remaining))
-                time.sleep(1)
-            st.image(TIMEUP_IMG)
+    if "running" not in st.session_state:
+        st.session_state.running = False
+
+    # カラムの作成
+    cols = st.columns([0.5, 0.5], gap="small")
+
+    # カラムにウィジェットを配置
+    with cols[0]:
+        timer_minutes = st.number_input("Minutes:", value=1, min_value=0, max_value=60)
+
+    with cols[1]:
+        timer_seconds = st.number_input(
+            "Seconds:", value=0, min_value=0, max_value=59, step=10
+        )
+
+    # 合計タイマー時間（秒）を計算
+    total_seconds = timer_minutes * 60 + timer_seconds
+
+    # 設定時間と表示する場所を確保
+    time_display = st.empty()
+
+    # タイマー開始とリセットボタン
+    start_button, reset_button = st.columns([1, 1])
+
+    if start_button.button("START"):
+        st.session_state.running = True
+
+    if reset_button.button("RESET"):
+        st.session_state.running = False
+
+    # 画像表示のためのプレースホルダー
+    image_placeholder = st.empty()
+
+    # タイマー実行
+    if st.session_state.running:
+        image_placeholder.image(COUNTDOWN_IMG, width=IMG_WIDTH)  # カウントダウン中の画像を表示
+        for remaining in range(total_seconds, 0, -1):
+            time_display.markdown(f"# {format_time(remaining)}")
+            time.sleep(1)
+            if not st.session_state.running:
+                break
+        if st.session_state.running:
+            time_display.markdown("# TIME UP!")
+            image_placeholder.image(TIME_UP_IMG, width=IMG_WIDTH)  # タイマー終了時の画像を表示
+            st.session_state.running = False
+    else:
+        time_display.markdown(f"# {format_time(total_seconds)}")
+        image_placeholder.empty()
 
 
 if __name__ == "__main__":
