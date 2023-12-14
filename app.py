@@ -22,12 +22,11 @@ def main():
         st.session_state.running = False
 
     # カラムの作成
-    cols = st.columns([0.5, 0.5], gap="small")
+    cols = st.columns(2)
 
     # カラムにウィジェットを配置
     with cols[0]:
         timer_minutes = st.number_input("Minutes:", value=1, min_value=0, max_value=60)
-
     with cols[1]:
         timer_seconds = st.number_input(
             "Seconds:", value=0, min_value=0, max_value=59, step=10
@@ -40,7 +39,7 @@ def main():
     time_display = st.empty()
 
     # タイマー開始とリセットボタン
-    start_button, reset_button = st.columns([1, 1])
+    start_button, reset_button = st.columns(2)
 
     if start_button.button("START"):
         st.session_state.running = True
@@ -48,8 +47,11 @@ def main():
     if reset_button.button("RESET"):
         st.session_state.running = False
 
-    # 画像表示のためのプレースホルダー
-    image_placeholder = st.empty()
+    # 画像表示のためのカラム
+    col_left, col_image, col_right = st.columns([1, 2, 1])
+    with col_image:
+        # 画像表示のためのプレースホルダー
+        image_placeholder = st.empty()
 
     # タイマー実行
     if st.session_state.running:
