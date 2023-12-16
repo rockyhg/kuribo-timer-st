@@ -61,7 +61,7 @@ def main():
             if not st.session_state.running:
                 break
         if st.session_state.running:
-            time_display.markdown("# TIME UP!")
+            time_display.markdown("# :orange[TIME UP!]")
             image_placeholder.image(TIME_UP_IMG, width=IMG_WIDTH)  # タイマー終了時の画像を表示
             st.session_state.running = False
     else:
